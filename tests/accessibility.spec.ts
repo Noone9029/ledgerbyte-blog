@@ -13,6 +13,18 @@ for (const route of ["/", "/preview-monthly-financial-reporting", "/search"]) {
   });
 }
 
+test("light theme has no serious accessibility violations", async ({ page }) => {
+  test.skip(test.info().project.name === "no-javascript", "Axe injection requires JavaScript");
+  await page.addInitScript(() => localStorage.setItem("ledgerbyte-theme", "dark"));
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Toggle color theme" }).click();
+  await page.waitForFunction(() => document.documentElement.dataset.theme === "light");
+  await page.waitForTimeout(100);
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations.filter((violation) => ["serious", "critical"].includes(violation.impact || ""))).toEqual([]);
+});
+
 test("skip link reaches main content", async ({ page }) => {
   test.skip(test.info().project.name === "no-javascript", "Keyboard interaction is covered by browser-enabled projects");
   await page.goto("/");
