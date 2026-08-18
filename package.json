@@ -16,6 +16,7 @@
     "content:launch:import": "node scripts/import-launch-posts.mjs",
     "content:launch:publish": "node scripts/publish-launch-posts.mjs",
     "content:launch:verify-published": "node scripts/verify-published-launch.mjs",
+    "content:launch:verify-live": "node scripts/verify-live-launch.mjs",
     "content:launch:render-diagrams": "node scripts/render-launch-diagrams.mjs",
     "content:launch:verify-sanity": "node scripts/verify-sanity-launch.mjs",
     "seo:indexnow": "node scripts/submit-indexnow.mjs",
