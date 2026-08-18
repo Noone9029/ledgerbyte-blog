@@ -46,6 +46,9 @@ export const postProjection = `{
   "topics": topics[]->${topicProjection},
   "author": author->${personProjection},
   "reviewer": reviewer->${personProjection},
+  editorialReview{status,reviewedAt},
+  primaryQuery,
+  relatedQueries,
   "heroImage": heroImage ${imageProjection},
   body[]{
     ...,

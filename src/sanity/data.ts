@@ -1,8 +1,6 @@
-import { draftMode } from "next/headers";
 import {
   fixtureCategories,
   fixturePeople,
-  fixturePosts,
   fixtureSettings,
   fixtureTopics,
 } from "@/content/fixtures";
@@ -17,13 +15,14 @@ import {
   topicsQuery,
 } from "@/sanity/queries";
 import type { Category, Person, Post, SiteSettings, Topic } from "@/types/content";
+import { launchFixturePosts } from "@/content/launch-fixtures";
 
 async function fetchSanity<T>(
   query: string,
   params: Record<string, unknown> = {},
   tags: string[] = [],
+  preview = false,
 ): Promise<T> {
-  const preview = (await draftMode()).isEnabled;
   const client = preview ? sanityPreviewClient : sanityClient;
   if (!client) throw new Error("Sanity is not configured.");
 
@@ -33,34 +32,34 @@ async function fetchSanity<T>(
   });
 }
 
-export async function getPosts(): Promise<Post[]> {
-  if (!HAS_SANITY) return fixturePosts;
-  return fetchSanity<Post[]>(allPostsQuery, {}, ["posts"]);
+export async function getPosts(preview = false): Promise<Post[]> {
+  if (!HAS_SANITY) return launchFixturePosts;
+  return fetchSanity<Post[]>(allPostsQuery, {}, ["posts"], preview);
 }
 
-export async function getPost(slug: string): Promise<Post | null> {
+export async function getPost(slug: string, preview = false): Promise<Post | null> {
   if (!HAS_SANITY) {
-    return fixturePosts.find((post) => post.slug === slug) ?? null;
+    return launchFixturePosts.find((post) => post.slug === slug) ?? null;
   }
   return fetchSanity<Post | null>(postBySlugQuery, { slug }, [
     "posts",
     `post:${slug}`,
-  ]);
+  ], preview);
 }
 
-export async function getCategories(): Promise<Category[]> {
+export async function getCategories(preview = false): Promise<Category[]> {
   if (!HAS_SANITY) return fixtureCategories;
-  return fetchSanity<Category[]>(categoriesQuery, {}, ["categories"]);
+  return fetchSanity<Category[]>(categoriesQuery, {}, ["categories"], preview);
 }
 
-export async function getTopics(): Promise<Topic[]> {
+export async function getTopics(preview = false): Promise<Topic[]> {
   if (!HAS_SANITY) return fixtureTopics;
-  return fetchSanity<Topic[]>(topicsQuery, {}, ["topics"]);
+  return fetchSanity<Topic[]>(topicsQuery, {}, ["topics"], preview);
 }
 
-export async function getPeople(): Promise<Person[]> {
+export async function getPeople(preview = false): Promise<Person[]> {
   if (!HAS_SANITY) return fixturePeople;
-  return fetchSanity<Person[]>(peopleQuery, {}, ["people"]);
+  return fetchSanity<Person[]>(peopleQuery, {}, ["people"], preview);
 }
 
 export async function getSettings(): Promise<SiteSettings> {
@@ -68,11 +67,11 @@ export async function getSettings(): Promise<SiteSettings> {
   return fetchSanity<SiteSettings>(settingsQuery, {}, ["settings"]);
 }
 
-export async function searchPosts(query: string): Promise<Post[]> {
+export async function searchPosts(query: string, preview = false): Promise<Post[]> {
   const normalized = query.trim().toLowerCase();
   if (!normalized) return [];
 
-  const posts = await getPosts();
+  const posts = await getPosts(preview);
   return posts.filter((post) => {
     const haystack = [
       post.title,

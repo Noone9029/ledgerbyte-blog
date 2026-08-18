@@ -11,8 +11,9 @@ export const sanityClient = HAS_SANITY
       projectId: SANITY_PROJECT_ID,
       dataset: SANITY_DATASET,
       apiVersion: SANITY_API_VERSION,
-      useCdn: true,
+      useCdn: false,
       perspective: "published",
+      token: process.env.SANITY_API_READ_TOKEN,
       stega: { enabled: false },
     })
   : null;

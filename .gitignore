@@ -12,6 +12,7 @@
 /playwright-report
 /test-results
 /coverage
+/artifacts
 
 # local configuration and secrets
 .env*
@@ -25,4 +26,3 @@
 *.pem
 *.tsbuildinfo
 next-env.d.ts
-.vercel

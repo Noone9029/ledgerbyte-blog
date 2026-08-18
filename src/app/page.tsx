@@ -1,6 +1,7 @@
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import Link from "next/link";
+import { draftMode } from "next/headers";
 import { PostCard } from "@/components/post-card";
 import { StructuredData } from "@/components/structured-data";
 import { HAS_SANITY, SITE_DESCRIPTION, SITE_NAME, absoluteUrl } from "@/lib/config";
@@ -8,7 +9,8 @@ import { getCategories, getPosts } from "@/sanity/data";
 import { imageUrl } from "@/sanity/image";
 
 export default async function HomePage() {
-  const [posts, categories] = await Promise.all([getPosts(), getCategories()]);
+  const preview = (await draftMode()).isEnabled;
+  const [posts, categories] = await Promise.all([getPosts(preview), getCategories(preview)]);
   const featured = posts.find((post) => post.featured) ?? posts[0];
   const latest = posts.filter((post) => post._id !== featured?._id).slice(0, 6);
 

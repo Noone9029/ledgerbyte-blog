@@ -6,6 +6,9 @@ import { schemaTypes } from "./src/sanity/schemaTypes";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "demo";
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
+const previewOrigin = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export default defineConfig({
   name: "ledgerbyte-insights",
@@ -17,7 +20,7 @@ export default defineConfig({
     structureTool(),
     presentationTool({
       previewUrl: {
-        origin: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+        origin: previewOrigin,
         previewMode: {
           enable: "/api/draft-mode/enable",
         },

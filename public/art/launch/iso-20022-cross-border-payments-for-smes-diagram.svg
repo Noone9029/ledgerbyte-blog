@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">ISO 20022 payment data chain</title><desc id="desc">A five-step flow from invoice through structured data and banks to the recipient and automated reconciliation.</desc>
+  <rect width="1600" height="900" fill="#171717"/><text x="100" y="110" fill="#f2eee5" font-family="Arial,sans-serif" font-size="42" font-weight="700">A complete payment data chain</text>
+  <g font-family="Arial,sans-serif" text-anchor="middle"><g fill="#242424" stroke="#d99a32" stroke-width="4">
+    <rect x="90" y="320" width="240" height="190" rx="28"/><rect x="385" y="320" width="240" height="190" rx="28"/><rect x="680" y="320" width="240" height="190" rx="28"/><rect x="975" y="320" width="240" height="190" rx="28"/><rect x="1270" y="320" width="240" height="190" rx="28"/>
+  </g><g fill="#f2eee5" font-size="29" font-weight="700"><text x="210" y="410">Invoice</text><text x="505" y="395">Structured</text><text x="505" y="435">payment fields</text><text x="800" y="410">Bank chain</text><text x="1095" y="410">Recipient</text><text x="1390" y="395">Automated</text><text x="1390" y="435">reconciliation</text></g></g>
+  <g stroke="#d99a32" stroke-width="8" fill="none"><path d="M330 415H365"/><path d="M625 415H660"/><path d="M920 415H955"/><path d="M1215 415H1250"/></g><g fill="#d99a32"><path d="M365 415l-18-12v24z"/><path d="M660 415l-18-12v24z"/><path d="M955 415l-18-12v24z"/><path d="M1250 415l-18-12v24z"/></g>
+  <text x="100" y="690" fill="#c9c3b8" font-family="Arial,sans-serif" font-size="28">Beneficiary, purpose, invoice reference and identifiers must survive every handoff.</text>
+</svg>

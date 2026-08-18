@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { ArticleBody, InlineCta } from "@/components/article-body";
 import { EditorialImage } from "@/components/editorial-image";
@@ -18,14 +19,15 @@ type PageProps = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const preview = await draftMode();
+  const post = await getPost(slug, preview.isEnabled);
   if (!post) return {};
   return createMetadata({
     title: post.seo.title || post.title,
     description: post.seo.description || post.excerpt,
     path: `/${post.slug}`,
     image: imageUrl(post.heroImage),
-    noIndex: post.seo.noIndex,
+    noIndex: preview.isEnabled || post.seo.noIndex,
     type: "article",
   });
 }
@@ -36,12 +38,16 @@ export async function generateStaticParams() {
 
 export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params;
-  const [post, posts] = await Promise.all([getPost(slug), getPosts()]);
+  const preview = (await draftMode()).isEnabled;
+  const [post, posts] = await Promise.all([getPost(slug, preview), getPosts(preview)]);
   if (!post) notFound();
   const headings = post.body.filter((item) => item._type === "block" && ["h2", "h3"].includes(item.style || ""));
   const related = posts.filter((candidate) => candidate._id !== post._id && candidate.category.slug === post.category.slug).slice(0, 3);
   const personUrl = post.author.canonicalProfileUrl || absoluteUrl(`/author/${post.author.slug}`);
   const canonical = post.seo.canonicalUrl || absoluteUrl(`/${post.slug}`);
+  const approvedReviewer = post.editorialReview?.status === "approved" && post.editorialReview.reviewedAt
+    ? post.reviewer
+    : undefined;
 
   return (
     <main id="main-content">
@@ -71,7 +77,7 @@ export default async function ArticlePage({ params }: PageProps) {
           <div className="article-content">
             <ArticleBody value={post.body} />
             {post.sources.length > 0 && <section className="sources" aria-labelledby="sources-heading"><h2 id="sources-heading">Sources</h2><ol>{post.sources.map((source) => <li key={source.url}><a href={source.url} rel="noreferrer">{source.label}</a>{source.publisher && <span> — {source.publisher}</span>}</li>)}</ol></section>}
-            {post.reviewer && <aside className="reviewer"><span>Reviewed by</span><h2>{post.reviewer.name}</h2><p>{post.reviewer.role}{post.reviewer.credentials ? ` · ${post.reviewer.credentials}` : ""}</p><p>{post.reviewer.bio}</p>{post.reviewer.canonicalProfileUrl && <a className="text-link" href={post.reviewer.canonicalProfileUrl}>View profile <ArrowUpRight aria-hidden="true" /></a>}</aside>}
+            {approvedReviewer && <aside className="reviewer"><span>Reviewed by</span><h2>{approvedReviewer.name}</h2><p>{approvedReviewer.role}{approvedReviewer.credentials ? ` · ${approvedReviewer.credentials}` : ""}</p><p>{approvedReviewer.bio}</p>{approvedReviewer.canonicalProfileUrl && <a className="text-link" href={approvedReviewer.canonicalProfileUrl}>View profile <ArrowUpRight aria-hidden="true" /></a>}</aside>}
             <InlineCta cta={post.serviceCta} />
             <aside className="author-box"><span>About the author</span><div>{post.author.portrait && <Image src={imageUrl(post.author.portrait, 160)} alt="" width={80} height={80} />}<div><h2>{post.author.name}</h2><p>{post.author.role}{post.author.credentials ? ` · ${post.author.credentials}` : ""}</p><p>{post.author.bio}</p><Link className="text-link" href={`/author/${post.author.slug}`}>More from {post.author.name}</Link></div></div></aside>
           </div>
@@ -84,7 +90,7 @@ export default async function ArticlePage({ params }: PageProps) {
         {
           "@context": "https://schema.org", "@type": "Article", "@id": `${canonical}#article`, mainEntityOfPage: canonical, headline: post.title, description: post.excerpt, image: [imageUrl(post.heroImage)], datePublished: post.publishedAt, dateModified: post.updatedAt || post.publishedAt,
           author: { "@type": "Person", "@id": `${personUrl}#person`, name: post.author.name, url: personUrl, jobTitle: post.author.role },
-          reviewedBy: post.reviewer ? { "@type": "Person", name: post.reviewer.name, url: post.reviewer.canonicalProfileUrl } : undefined,
+          reviewedBy: approvedReviewer ? { "@type": "Person", name: approvedReviewer.name, url: approvedReviewer.canonicalProfileUrl } : undefined,
           publisher: { "@id": "https://ledgerbyte.io/#organization" }, articleSection: post.category.title, keywords: post.topics.map((topic) => topic.title),
         },
         { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [

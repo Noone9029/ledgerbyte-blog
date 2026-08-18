@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { PostCard } from "@/components/post-card";
 import { createMetadata } from "@/lib/metadata";
@@ -8,7 +9,8 @@ export const metadata: Metadata = createMetadata({ title: "Search", description:
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const query = (await searchParams).q?.trim() || "";
-  const results = query ? await searchPosts(query) : [];
+  const preview = (await draftMode()).isEnabled;
+  const results = query ? await searchPosts(query, preview) : [];
   return (
     <main id="main-content">
       <header className="listing-hero search-hero page-section">

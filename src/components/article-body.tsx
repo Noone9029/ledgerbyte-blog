@@ -37,7 +37,12 @@ const components: PortableTextComponents = {
       </figure>
     ),
     editorialTable: ({ value }) => (
-      <div className="table-scroll">
+      <div
+        aria-label={value.caption || "Article data table"}
+        className="table-scroll"
+        role="region"
+        tabIndex={0}
+      >
         <table>
           <caption>{value.caption}</caption>
           <thead><tr>{(value.headers || []).map((header: string) => <th scope="col" key={header}>{header}</th>)}</tr></thead>

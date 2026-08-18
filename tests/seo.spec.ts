@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 test("preview fixture article has canonical metadata and remains noindex", async ({ page }) => {
   test.skip(test.info().project.name === "no-javascript", "SEO markup is covered in browser-enabled projects");
-  await page.goto("/preview-monthly-financial-reporting");
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /preview-monthly-financial-reporting/);
+  await page.goto("/2026-sme-finance-outlook-credit-costs");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /2026-sme-finance-outlook-credit-costs/);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
   const schema = await page.locator('script[type="application/ld+json"]').allTextContents();
   expect(schema.some((value) => value.includes('"@type":"Article"'))).toBe(true);

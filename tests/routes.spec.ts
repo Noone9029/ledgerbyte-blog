@@ -7,7 +7,7 @@ const routes = [
   "/topic/automation",
   "/author/alina-khalid",
   "/search?q=automation",
-  "/preview-monthly-financial-reporting",
+  "/2026-sme-finance-outlook-credit-costs",
   "/rss.xml",
   "/robots.txt",
   "/sitemap.xml",
@@ -32,7 +32,7 @@ test("navigation exposes both editorial pillars", async ({ page }) => {
 
 test("article remains readable without JavaScript", async ({ page }) => {
   test.skip(test.info().project.name !== "no-javascript", "No-JS project only");
-  await page.goto("/preview-monthly-financial-reporting");
+  await page.goto("/2026-sme-finance-outlook-credit-costs");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.locator(".article-content")).toContainText("publishing");
+  await expect(page.locator(".article-content")).toContainText("credit");
 });

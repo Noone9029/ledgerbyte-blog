@@ -11,9 +11,14 @@
     "test:e2e": "playwright test",
     "test:content": "node scripts/verify-content.mjs",
     "test:legacy": "node scripts/verify-legacy-inventory.mjs",
+    "test:launch-content": "node scripts/verify-launch-content.mjs",
     "content:seed": "node scripts/seed-sanity.mjs",
+    "content:launch:import": "node scripts/import-launch-posts.mjs",
+    "content:launch:publish": "node scripts/publish-launch-posts.mjs",
+    "content:launch:render-diagrams": "node scripts/render-launch-diagrams.mjs",
+    "content:launch:verify-sanity": "node scripts/verify-sanity-launch.mjs",
     "seo:indexnow": "node scripts/submit-indexnow.mjs",
-    "test": "npm run test:content && npm run test:legacy && npm run lint && npm run typecheck && npm run build"
+    "test": "npm run test:content && npm run test:legacy && npm run test:launch-content && npm run lint && npm run typecheck && npm run build"
   },
   "dependencies": {
     "@phosphor-icons/react": "2.1.10",

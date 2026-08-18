@@ -13,7 +13,11 @@ export const SANITY_DATASET =
   process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 export const SANITY_API_VERSION =
   process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2026-08-01";
-export const HAS_SANITY = Boolean(SANITY_PROJECT_ID);
+// The production dataset is private, so public routes must not switch away from
+// the review fixtures until a server-only viewer token is present.
+export const HAS_SANITY = Boolean(
+  SANITY_PROJECT_ID && process.env.SANITY_API_READ_TOKEN,
+);
 
 export const isProductionDomain = SITE_URL === "https://blog.ledgerbyte.io";
 

@@ -93,6 +93,12 @@ export type Post = {
   topics: Topic[];
   author: Person;
   reviewer?: Person;
+  editorialReview?: {
+    status: "pending" | "approved" | "changes-requested";
+    reviewedAt?: string;
+  };
+  primaryQuery?: string;
+  relatedQueries?: string[];
   heroImage: EditorialImage;
   body: PortableBlock[];
   sources: Source[];

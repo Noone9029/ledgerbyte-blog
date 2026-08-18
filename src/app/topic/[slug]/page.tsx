@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { ListingPage } from "@/components/listing-page";
 import { createMetadata } from "@/lib/metadata";
@@ -18,7 +19,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function TopicPage({ params }: PageProps) {
   const { slug } = await params;
-  const [topics, posts] = await Promise.all([getTopics(), getPosts()]);
+  const preview = (await draftMode()).isEnabled;
+  const [topics, posts] = await Promise.all([getTopics(preview), getPosts(preview)]);
   const topic = topics.find((item) => item.slug === slug);
   if (!topic) notFound();
   return <ListingPage eyebrow="Topic" title={topic.title} description={topic.description} posts={posts.filter((post) => post.topics.some((item) => item.slug === topic.slug))} />;

@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-for (const route of ["/", "/preview-monthly-financial-reporting", "/search"]) {
+for (const route of ["/", "/2026-sme-finance-outlook-credit-costs", "/search"]) {
   test(`${route} has no serious accessibility violations`, async ({ page }) => {
     test.skip(test.info().project.name === "no-javascript", "Axe injection requires JavaScript");
     await page.addInitScript(() => localStorage.setItem("ledgerbyte-theme", "dark"));

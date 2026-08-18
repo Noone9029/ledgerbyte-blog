@@ -195,6 +195,40 @@ const post = defineType({
     defineField({ name: "topics", title: "Topics", type: "array", of: [{ type: "reference", to: [{ type: "topic" }] }], group: "publishing", validation: (Rule) => Rule.unique().max(5) }),
     defineField({ name: "author", title: "Author", type: "reference", to: [{ type: "person" }], group: "publishing", validation: (Rule) => Rule.required() }),
     defineField({ name: "reviewer", title: "Qualified reviewer", type: "reference", to: [{ type: "person" }], group: "publishing", description: "Strongly recommended for finance, tax, payroll, compliance, or regulatory claims." }),
+    defineField({
+      name: "editorialReview",
+      title: "Launch editorial review",
+      type: "object",
+      group: "publishing",
+      description: "Internal approval record. Notes are never included in public queries.",
+      fields: [
+        defineField({
+          name: "status",
+          title: "Status",
+          type: "string",
+          initialValue: "pending",
+          options: {
+            layout: "radio",
+            list: [
+              { title: "Pending review", value: "pending" },
+              { title: "Approved", value: "approved" },
+              { title: "Changes requested", value: "changes-requested" },
+            ],
+          },
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({ name: "reviewedAt", title: "Reviewed at", type: "datetime" }),
+        defineField({ name: "notes", title: "Private review notes", type: "text", rows: 5 }),
+      ],
+      validation: (Rule) => Rule.custom((value) => {
+        if (!value || typeof value !== "object") return "A review status is required for launch articles.";
+        const review = value as { status?: string; reviewedAt?: string };
+        if (review.status === "approved" && !review.reviewedAt) return "Approved articles need a review date.";
+        return true;
+      }),
+    }),
+    defineField({ name: "primaryQuery", title: "Primary search query", type: "string", group: "seo", validation: (Rule) => Rule.required().min(8) }),
+    defineField({ name: "relatedQueries", title: "Related search queries", type: "array", of: [{ type: "string" }], group: "seo", validation: (Rule) => Rule.required().min(3).max(5).unique() }),
     defineField({ name: "heroImage", title: "Hero image", type: "editorialImage", group: "content", validation: (Rule) => Rule.required() }),
     defineField({
       name: "body",

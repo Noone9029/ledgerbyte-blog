@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { ListingPage } from "@/components/listing-page";
 import { StructuredData } from "@/components/structured-data";
@@ -20,7 +21,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function AuthorPage({ params }: PageProps) {
   const { slug } = await params;
-  const [people, posts] = await Promise.all([getPeople(), getPosts()]);
+  const preview = (await draftMode()).isEnabled;
+  const [people, posts] = await Promise.all([getPeople(preview), getPosts(preview)]);
   const person = people.find((item) => item.slug === slug);
   if (!person) notFound();
   const page = <ListingPage eyebrow={`${person.role}${person.credentials ? ` · ${person.credentials}` : ""}`} title={person.name} description={person.bio} posts={posts.filter((post) => post.author.slug === person.slug)} />;
