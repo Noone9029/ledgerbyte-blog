@@ -9,6 +9,7 @@ import { StructuredData } from "@/components/structured-data";
 import {
   absoluteUrl,
   HAS_SANITY,
+  IS_INDEXING_ENABLED,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_URL,
@@ -28,7 +29,11 @@ const cabinetGrotesk = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  ...createMetadata({ title: SITE_NAME, description: SITE_DESCRIPTION }),
+  ...createMetadata({
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    noIndex: !IS_INDEXING_ENABLED,
+  }),
   applicationName: SITE_NAME,
   creator: "LedgerByte",
   publisher: "LedgerByte",

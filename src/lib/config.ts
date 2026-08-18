@@ -18,6 +18,8 @@ export const SANITY_API_VERSION =
 export const HAS_SANITY = Boolean(
   SANITY_PROJECT_ID && process.env.SANITY_API_READ_TOKEN,
 );
+export const IS_INDEXING_ENABLED =
+  process.env.NEXT_PUBLIC_LAUNCH_INDEXING_ENABLED === "true";
 
 export const isProductionDomain = SITE_URL === "https://blog.ledgerbyte.io";
 

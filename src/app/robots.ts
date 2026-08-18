@@ -1,8 +1,10 @@
 import type { MetadataRoute } from "next";
-import { HAS_SANITY, SITE_URL } from "@/lib/config";
+import { HAS_SANITY, IS_INDEXING_ENABLED, SITE_URL } from "@/lib/config";
 
 export default function robots(): MetadataRoute.Robots {
-  if (!HAS_SANITY) return { rules: { userAgent: "*", disallow: "/" } };
+  if (!HAS_SANITY || !IS_INDEXING_ENABLED) {
+    return { rules: { userAgent: "*", disallow: "/" } };
+  }
   return {
     rules: [
       { userAgent: "*", allow: "/", disallow: ["/studio/", "/api/", "/search"] },
